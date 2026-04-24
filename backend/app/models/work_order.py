@@ -39,8 +39,8 @@ class WorkOrder(Base):
     title           = Column(String, nullable=False)
     description     = Column(Text, nullable=True)
     service_type    = Column(String, nullable=True)   # install | repair | maintenance | inspection
-    priority        = Column(Enum(WorkOrderPriority), default=WorkOrderPriority.MEDIUM)
-    status          = Column(Enum(WorkOrderStatus), default=WorkOrderStatus.DRAFT)
+    priority        = Column(Enum(WorkOrderPriority, native_enum=False), default=WorkOrderPriority.MEDIUM)
+    status          = Column(Enum(WorkOrderStatus, native_enum=False), default=WorkOrderStatus.DRAFT)
 
     # Localização do serviço
     site_address    = Column(String, nullable=True)
@@ -67,7 +67,7 @@ class WorkOrder(Base):
     # Salesforce sync — espelha Work Order object do SFS
     salesforce_id     = Column(String, nullable=True, index=True)
     sf_appointment_id = Column(String, nullable=True)   # Service Appointment ID
-    sync_status       = Column(Enum(SyncStatus), default=SyncStatus.UNSYNCED)
+    sync_status       = Column(Enum(SyncStatus, native_enum=False), default=SyncStatus.UNSYNCED)
     last_synced_at    = Column(DateTime, nullable=True)
     sync_error        = Column(Text, nullable=True)
 

@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, String, Enum, DateTime, Text
+from sqlalchemy import Column, Integer, String, Boolean, Enum, DateTime, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.database import Base
@@ -31,7 +31,7 @@ class Client(Base):
 
     # Salesforce sync
     salesforce_id   = Column(String, nullable=True, index=True)
-    sync_status     = Column(Enum(SyncStatus), default=SyncStatus.UNSYNCED)
+    sync_status     = Column(Enum(SyncStatus, native_enum=False), default=SyncStatus.UNSYNCED)
     last_synced_at  = Column(DateTime, nullable=True)
     sync_error      = Column(Text, nullable=True)
 
@@ -39,6 +39,3 @@ class Client(Base):
     updated_at    = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     work_orders   = relationship("WorkOrder", back_populates="client")
-
-
-from sqlalchemy import Boolean

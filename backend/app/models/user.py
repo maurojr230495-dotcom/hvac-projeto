@@ -29,10 +29,10 @@ class User(Base):
 
     # Auth Microsoft Entra ID
     microsoft_id      = Column(String, unique=True, nullable=True, index=True)
-    auth_provider     = Column(Enum(AuthProvider), default=AuthProvider.LOCAL)
+    auth_provider     = Column(Enum(AuthProvider, native_enum=False), default=AuthProvider.LOCAL)
 
     # RBAC
-    role              = Column(Enum(UserRole), default=UserRole.TECHNICIAN, nullable=False)
+    role              = Column(Enum(UserRole, native_enum=False), default=UserRole.TECHNICIAN, nullable=False)
     is_active         = Column(Boolean, default=True)
 
     # Perfil do técnico (usado quando role == TECHNICIAN)
@@ -47,4 +47,4 @@ class User(Base):
 
     # Relacionamentos
     work_orders       = relationship("WorkOrder", back_populates="technician", foreign_keys="WorkOrder.technician_id")
-    timesheets        = relationship("TimeSheet", back_populates="technician")
+    timesheets        = relationship("TimeSheet", back_populates="technician", foreign_keys="TimeSheet.technician_id")

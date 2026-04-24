@@ -39,7 +39,7 @@ class TimeSheet(Base):
     cost_center     = Column(String, nullable=False)
 
     # Atividade
-    activity_type   = Column(Enum(ActivityType), nullable=False)
+    activity_type   = Column(Enum(ActivityType, native_enum=False), nullable=False)
     description     = Column(Text, nullable=True)
 
     # Jornada
@@ -55,14 +55,14 @@ class TimeSheet(Base):
     checkout_lng    = Column(Float, nullable=True)
 
     # Aprovação
-    status          = Column(Enum(TimesheetStatus), default=TimesheetStatus.ACTIVE)
+    status          = Column(Enum(TimesheetStatus, native_enum=False), default=TimesheetStatus.ACTIVE)
     approved_by_id  = Column(Integer, ForeignKey("users.id"), nullable=True)
     approved_at     = Column(DateTime, nullable=True)
     rejection_note  = Column(Text, nullable=True)
 
     # Salesforce sync — espelha Time Sheet do SFS
     salesforce_id   = Column(String, nullable=True, index=True)
-    sync_status     = Column(Enum(SyncStatus), default=SyncStatus.UNSYNCED)
+    sync_status     = Column(Enum(SyncStatus, native_enum=False), default=SyncStatus.UNSYNCED)
     last_synced_at  = Column(DateTime, nullable=True)
     sync_error      = Column(Text, nullable=True)
 
