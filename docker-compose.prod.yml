@@ -1,0 +1,26 @@
+version: "3.9"
+
+# ── Produção (Azure / AWS) ─────────────────────────────────────────────────────
+# As variáveis de ambiente vêm do serviço de secrets da cloud (Key Vault / Secrets Manager)
+# Não montar volumes de código — imagem deve ser imutável
+
+services:
+  app:
+    image: ${DOCKER_IMAGE}   # ex: myregistry.azurecr.io/hvac-backend:latest
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - APP_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - REDIS_URL=${REDIS_URL}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

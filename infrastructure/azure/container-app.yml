@@ -1,0 +1,62 @@
+# Azure Container Apps — deploy via GitHub Actions
+# Documentação: https://learn.microsoft.com/azure/container-apps
+
+name: hvac-backend
+type: Microsoft.App/containerApps
+location: australiaeast        # datacenter mais próximo do cliente
+
+properties:
+  environmentId: /subscriptions/{SUB_ID}/resourceGroups/{RG}/providers/Microsoft.App/managedEnvironments/hvac-env
+
+  configuration:
+    ingress:
+      external: true
+      targetPort: 8000
+      transport: http
+      corsPolicy:
+        allowedOrigins:
+          - https://app.seudominio.com
+        allowedMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+        allowedHeaders: ["*"]
+        allowCredentials: true
+
+    registries:
+      - server: hvacregistry.azurecr.io
+        identity: system
+
+    secrets:
+      - name: database-url
+        keyVaultUrl: https://hvac-vault.vault.azure.net/secrets/DATABASE-URL
+        identity: system
+      - name: secret-key
+        keyVaultUrl: https://hvac-vault.vault.azure.net/secrets/SECRET-KEY
+        identity: system
+      - name: azure-client-secret
+        keyVaultUrl: https://hvac-vault.vault.azure.net/secrets/AZURE-CLIENT-SECRET
+        identity: system
+
+  template:
+    containers:
+      - name: hvac-backend
+        image: hvacregistry.azurecr.io/hvac-backend:latest
+        resources:
+          cpu: 0.5
+          memory: 1Gi
+        env:
+          - name: APP_ENV
+            value: production
+          - name: DATABASE_URL
+            secretRef: database-url
+          - name: SECRET_KEY
+            secretRef: secret-key
+          - name: AZURE_CLIENT_SECRET
+            secretRef: azure-client-secret
+
+    scale:
+      minReplicas: 1
+      maxReplicas: 5
+      rules:
+        - name: http-scaling
+          http:
+            metadata:
+              concurrentRequests: "50"

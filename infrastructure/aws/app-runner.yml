@@ -1,0 +1,34 @@
+# AWS App Runner — alternativa ao Azure
+# Deploy via GitHub Actions ou CLI
+
+Service:
+  ServiceName: hvac-backend
+  SourceConfiguration:
+    ImageRepository:
+      ImageIdentifier: !Sub "${AWS::AccountId}.dkr.ecr.ap-southeast-2.amazonaws.com/hvac-backend:latest"
+      ImageRepositoryType: ECR
+      ImageConfiguration:
+        Port: "8000"
+        RuntimeEnvironmentSecrets:
+          DATABASE_URL: "arn:aws:secretsmanager:ap-southeast-2:{ACCOUNT}:secret:hvac/database-url"
+          SECRET_KEY: "arn:aws:secretsmanager:ap-southeast-2:{ACCOUNT}:secret:hvac/secret-key"
+          AZURE_CLIENT_SECRET: "arn:aws:secretsmanager:ap-southeast-2:{ACCOUNT}:secret:hvac/azure-client-secret"
+        RuntimeEnvironmentVariables:
+          APP_ENV: production
+          PORT: "8000"
+    AutoDeploymentsEnabled: true
+
+  InstanceConfiguration:
+    Cpu: "0.5 vCPU"
+    Memory: "1 GB"
+
+  HealthCheckConfiguration:
+    Protocol: HTTP
+    Path: /api/health
+    Interval: 10
+    Timeout: 5
+    HealthyThreshold: 2
+    UnhealthyThreshold: 3
+
+  # Sydney region — mais próximo da Austrália
+  # Region: ap-southeast-2
