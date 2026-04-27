@@ -38,4 +38,7 @@ class Client(Base):
     created_at    = Column(DateTime, default=datetime.utcnow)
     updated_at    = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    work_orders   = relationship("WorkOrder", back_populates="client")
+    work_orders           = relationship("WorkOrder", back_populates="client")
+    assets                = relationship("Asset", back_populates="client")
+    maintenance_schedules = relationship("MaintenanceSchedule", back_populates="client")
+    invoices              = relationship("Invoice", back_populates="client")

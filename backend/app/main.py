@@ -78,13 +78,21 @@ async def request_id_and_logging(request: Request, call_next) -> Response:
 
 
 # Routers — imported after app is defined to avoid circular imports
-from app.routers import auth, users, clients, work_orders, timesheets  # noqa: E402
+from app.routers import (  # noqa: E402
+    auth, users, clients, work_orders, timesheets,
+    assets, service_reports, maintenance, invoices, analytics,
+)
 
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(clients.router)
 app.include_router(work_orders.router)
 app.include_router(timesheets.router)
+app.include_router(assets.router)
+app.include_router(service_reports.router)
+app.include_router(maintenance.router)
+app.include_router(invoices.router)
+app.include_router(analytics.router)
 
 
 @app.get("/health", tags=["System"])

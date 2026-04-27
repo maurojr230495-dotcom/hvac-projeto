@@ -10,6 +10,9 @@ import NewWorkOrder from './pages/workorders/NewWorkOrder'
 import DispatchBoard from './pages/dispatch/DispatchBoard'
 import Timesheets from './pages/timesheets/Timesheets'
 import Clients from './pages/clients/Clients'
+import Assets from './pages/assets/Assets'
+import Maintenance from './pages/maintenance/Maintenance'
+import Invoices from './pages/invoices/Invoices'
 import Settings from './pages/settings/Settings'
 
 const qc = new QueryClient({
@@ -30,10 +33,13 @@ export default function App() {
                 <Route path="new" element={<NewWorkOrder />} />
                 <Route path=":id" element={<WorkOrderDetail />} />
               </Route>
-              <Route path="dispatch"   element={<DispatchBoard />} />
-              <Route path="timesheets" element={<Timesheets />} />
-              <Route path="clients"    element={<Clients />} />
-              <Route path="settings"   element={<Settings />} />
+              <Route path="dispatch"    element={<DispatchBoard />} />
+              <Route path="timesheets"  element={<Timesheets />} />
+              <Route path="clients"     element={<Clients />} />
+              <Route path="assets"      element={<Assets />} />
+              <Route path="maintenance" element={<Maintenance />} />
+              <Route path="invoices"    element={<Invoices />} />
+              <Route path="settings"    element={<Settings />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -60,6 +60,13 @@ class WorkOrder(Base):
     materials_cost  = Column(Float, default=0.0)
     total_cost      = Column(Float, nullable=True)
 
+    # Asset (equipamento sendo atendido)
+    asset_id        = Column(Integer, ForeignKey("assets.id"), nullable=True)
+
+    # SLA tracking
+    sla_due_at      = Column(DateTime, nullable=True)   # prazo de resposta calculado por prioridade
+    sla_breached    = Column(Boolean, default=False)
+
     # Checklists e equipamentos (JSON flexível)
     equipment       = Column(JSON, default=list)      # equipamentos no local
     checklist       = Column(JSON, default=list)      # itens a verificar
@@ -79,3 +86,6 @@ class WorkOrder(Base):
     technician      = relationship("User", foreign_keys=[technician_id], back_populates="work_orders")
     created_by      = relationship("User", foreign_keys=[created_by_id])
     timesheets      = relationship("TimeSheet", back_populates="work_order")
+    asset           = relationship("Asset", back_populates="work_orders")
+    service_report  = relationship("ServiceReport", back_populates="work_order", uselist=False)
+    invoices        = relationship("Invoice", back_populates="work_order")
